@@ -9,10 +9,10 @@ namespace PruebasUnitarias
             var registerViewModel = new RegisterViewModel();
 
             //Act
-            bool result = registerViewModel.IsPasswordSecure("1234567");
+            bool resultado = registerViewModel.IsPasswordSecure("1234567");
 
             //Assert
-            Assert.False(result);
+            Assert.False(resultado);
 
         }
         [Fact]
@@ -22,10 +22,10 @@ namespace PruebasUnitarias
             var registerViewModel = new RegisterViewModel();
 
             //Act
-            bool result = registerViewModel.IsPasswordSecure("12345678a");
+            bool resultado = registerViewModel.IsPasswordSecure("12345678r");
 
             //Assert
-            Assert.False(result);
+            Assert.False(resultado);
 
         }
         [Fact]
@@ -35,10 +35,10 @@ namespace PruebasUnitarias
             var registerViewModel = new RegisterViewModel();
 
             // Act
-            bool result = registerViewModel.IsPasswordSecure("Q23D@45");
+            bool resultado = registerViewModel.IsPasswordSecure("R05D$83");
 
             // Assert
-            Assert.False(result);
+            Assert.False(resultado);
         }
     }
 
@@ -46,55 +46,29 @@ namespace PruebasUnitarias
     {
         internal bool IsPasswordSecure(string password)
         {
-            if (password.Length < 8)
+            if (password.Length >= 8 && ContieneMayuscula(password) && ContieneSimbolo(password))
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }
-            //1234A5678
-            if (!ContieneMayuscula(password))
-            {
-                return false;
-            }
-
-            if (!ContieneSimbolo(password))
-            {
-                return false;
-            }
-
-            return true;
         }
 
         private bool ContieneMayuscula(string password)
         {
-            char[] passwordChars = password.ToCharArray();
-            foreach (char c in passwordChars)
-            {
-                if (Char.IsLetter(c) && IsUpper(c))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return password.Any(p => Char.IsLetter(p) && IsUpper(p));
         }
 
         private bool IsUpper(char c)
         {
-            int codigoAscii = Convert.ToInt32(c);
-
-            return codigoAscii >= 65 && codigoAscii <= 90;
-
+            return Char.IsUpper(c);
         }
 
         private bool ContieneSimbolo(string password)
         {
-            foreach (char c in password)
-            {
-                if (!Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return password.Any(p => !Char.IsLetterOrDigit(p) && !Char.IsWhiteSpace(p));
         }
     }
 }
